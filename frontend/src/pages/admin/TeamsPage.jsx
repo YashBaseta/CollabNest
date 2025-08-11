@@ -13,7 +13,7 @@ import { io } from "socket.io-client";
 import Chatbox from "./Chatbox";
 import { AlignCenter } from "lucide-react";
 
-const socket = io("http://localhost:5000");
+const socket = io("https://collabnest-m2h3.onrender.com/");
 
 function TeamsPage() {
   const { projectId } = useParams();

@@ -5,7 +5,7 @@ import ChatSidebar from "../components/chat/ChatSidebar";
 import ChatWindow from "../components/chat/ChatWindow";
 import NewGroupModal from "../components/chat/NewGroupModal";
 
-const socket = io("http://localhost:5000");
+const socket = io("https://collabnest-m2h3.onrender.com/");
 
 export default function GeneralChat() {
   const [conversations, setConversations] = useState([]);
