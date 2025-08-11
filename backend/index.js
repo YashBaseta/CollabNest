@@ -18,7 +18,7 @@ dotenv.config();
 const app = express();
 // Connect MongoDB
 mongoose
-  .connect(process.env.MONGO_URI, {
+  .connect("mongodb+srv://yash:yash123@cluster0.pkng7vr.mongodb.net/", {
     useNewUrlParser: true,
     useUnifiedTopology: true,
   })
