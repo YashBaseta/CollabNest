@@ -26,13 +26,19 @@ mongoose
   .catch((err) => console.error("MongoDB connection error:", err));
 
 const PORT = process.env.PORT || 5000;
-
+const allowedOrigins = [
+  "http://localhost:5173", // local dev
+  "https://collabnest-1.onrender.com" // your deployed frontend
+];
 // Create HTTP + Socket.IO server
 const server = http.createServer(app);
 const io = new Server(server, {
-  cors: { origin: process.env.FRONTEND_ORIGIN, methods: ["GET", "POST"] },
+  cors: {
+    origin: allowedOrigins,
+    methods: ["GET", "POST"],
+    credentials: true
+  }
 });
-
 // Middleware
 app.use(cors());
 app.use(cookieParser());
