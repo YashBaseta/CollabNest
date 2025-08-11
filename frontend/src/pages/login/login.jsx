@@ -8,6 +8,7 @@ function LoginPage() {
   const [email, setEmail] = useState('')
   const [name, setName] = useState('')
   const [password,setPassword] = useState('')
+    const [showPassword, setShowPassword] = useState(false);
   const navigate= useNavigate()
 
   const login = async () => {
@@ -58,18 +59,26 @@ function LoginPage() {
       placeholder="Email"
       className="w-full border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-amber-500"
     />
-    <div className="space-y-1">
-      <Input
-      onChange={e => setPassword(e.target.value)}
-        type="password"
+    <div className="relative w-full">
+      <input
+        onChange={(e) => setPassword(e.target.value)}
+        type={showPassword ? "text" : "password"}
         placeholder="Password"
-        className="w-full border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-amber-500"
+        value={password}
+        className="w-full border border-gray-300 rounded-lg px-4 py-2 pr-10 focus:outline-none focus:ring-2 focus:ring-amber-500"
       />
+      <button
+        type="button"
+        onClick={() => setShowPassword((prev) => !prev)}
+        className="absolute inset-y-0 right-3 flex items-center text-gray-500 hover:text-gray-700"
+      >
+        {showPassword ? "🙈" : "👁️"}
+      </button>
+    </div>
       <div className="text-right">
         <a href="/forgot-password" className="text-sm text-amber-700 hover:underline">
           Forgot Password?
         </a>
-      </div>
     </div>
   </div>
 

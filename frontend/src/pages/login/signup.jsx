@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Input } from "../../components/ui/input";
 import api from "../../api"; // adjust the path based on your folder structure
 function SignupPage() {
+    const [showPassword, setShowPassword] = useState(false);
 
   const [form ,setForm] = useState({name:"",email:"",password:"", role:"user"})
 const register = async() =>{
@@ -54,12 +55,23 @@ const register = async() =>{
             placeholder="Email"
             className="w-full border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-amber-500"
           />
-          <Input
+          
+ <div className="relative w-full">
+      <Input
           onChange={e => setForm({ ...form, password: e.target.value })} 
-            type="password"
+            type={showPassword ? "text" : "password"}
             placeholder="Password"
             className="w-full border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-amber-500"
           />
+      <button
+        type="button"
+        onClick={() => setShowPassword((prev) => !prev)}
+        className="absolute inset-y-0 right-3 flex items-center text-gray-500 hover:text-gray-700"
+      >
+        {showPassword ? "🙈" : "👁️"}
+      </button>
+    </div>
+
         </div>
 
         <button onClick={register} className="mt-6 w-full bg-amber-700 hover:bg-amber-800 text-white py-2.5 font-semibold rounded-lg transition duration-200 ease-in-out">
