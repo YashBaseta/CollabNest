@@ -5,7 +5,7 @@ import toast, { Toaster } from "react-hot-toast";
 export const SocketContext = createContext();
 
 // Create a single socket instance (singleton)
-const socket = io("http://localhost:5000", {
+const socket = io("https://collabnest-m2h3.onrender.com", {
   transports: ["websocket"],
   reconnection: true,
 });
