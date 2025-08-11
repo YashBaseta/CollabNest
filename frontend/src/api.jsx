@@ -1,7 +1,7 @@
 import axios from "axios";
 
 const api = axios.create({
-  baseURL: "http://localhost:5000/api",
+  baseURL: "https://collabnest-m2h3.onrender.com/api",
 });
 
 api.interceptors.response.use(
