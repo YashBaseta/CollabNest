@@ -4,6 +4,8 @@ import http from "http";
 import { Server } from "socket.io";
 import mongoose from "mongoose";
 import cors from "cors";
+import dotenv from "dotenv";
+
 // Routes
 import authRouter from "./routes/auth.js"; 
 import projectRoutes from "./routes/projectRoutes.js";
@@ -13,23 +15,25 @@ import messageRoutes from "./routes/chat/messageRoutes.js";
 import conversationRoutes from "./routes/chat/conversationRoutes.js";
 import chatMessageRoutes from "./routes/chat/chatMessageRoutes.js";
 import User from "./models/auth.js";
-import dotenv from "dotenv";
+
 dotenv.config();
 const app = express();
-// Connect MongoDB
-mongoose
-  .connect("mongodb+srv://yash:yash123@cluster0.pkng7vr.mongodb.net/", {
-    useNewUrlParser: true,
-    useUnifiedTopology: true,
-  })
-  .then(() => console.log("Connected to MongoDB"))
-  .catch((err) => console.error("MongoDB connection error:", err));
 
 const PORT = process.env.PORT || 5000;
 const allowedOrigins = [
-  "http://localhost:5173", // local dev
-  "https://collabnest-1.onrender.com" // your deployed frontend
+  "http://localhost:5173", 
+  "https://collabnest-1.onrender.com"
 ];
+
+// Middleware
+app.use(cors({ origin: allowedOrigins, credentials: true }));
+app.use(cookieParser());
+app.use(express.json());
+app.use((req, res, next) => {
+  req.io = io; 
+  next();
+});
+
 // Create HTTP + Socket.IO server
 const server = http.createServer(app);
 const io = new Server(server, {
@@ -39,16 +43,8 @@ const io = new Server(server, {
     credentials: true
   }
 });
-// Middleware
-app.use(cors());
-app.use(cookieParser());
-app.use(express.json());
-app.use((req, res, next) => {
-  req.io = io; // Optional: allows emitting events from routes
-  next();
-});
 
-// Routes to fetch users
+// ------------------- Routes -------------------
 app.get("/api/users/search", async (req, res) => {
   const { query } = req.query;
   try {
@@ -84,8 +80,6 @@ app.get("/api/users/:id", async (req, res) => {
   }
 });
 
-
-// Register main routes
 app.use("/api", authRouter);
 app.use("/api/projects", projectRoutes);
 app.use("/api/tasks", taskRoutes);
@@ -98,58 +92,55 @@ app.use("/api/chat-messages", chatMessageRoutes);
 io.on("connection", (socket) => {
   console.log("User connected:", socket.id);
 
-  // Join a project room
-  socket.on("joinRoom", (roomId) => {
-    socket.join(roomId);
-    console.log(`User ${socket.id} joined project room ${roomId}`);
+  socket.on("joinRoom", (roomId) => socket.join(roomId));
+
+  socket.on("registerRole", (role) => {
+    if (role === "admin") socket.join("admins");
   });
 
-  // Register role (Admins join a global "admins" room)
-  socket.on("registerRole", (role) => {
-    if (role === "admin") {
-      socket.join("admins");
-      console.log(`Admin ${socket.id} joined global admins room`);
+  socket.on("taskStatusChanged", ({ task, projectId, role }) => {
+    if (role === "user") {
+      io.to(projectId).emit("notifyStatusChange", {
+        message: `${role} Task "${task.title}" moved to "${task.status}"`,
+        task,
+      });
+    } else {
+      io.to("admins").emit("notifyStatusChange", {
+        message: `Task "${task.title}" moved to "${task.status}" in Project ${projectId}`,
+        task,
+      });
     }
   });
 
-socket.on("taskStatusChanged", ({task, projectId, role }) => {
-  if (role === "user") {
-    // Admin changed the task → notify users in the project
-    io.to(projectId).emit("notifyStatusChange", {
-      message: `${role} Task "${task.title}" moved to "${task.status}"`,
-      task,
-    });
-  } else {
-    // User changed the task → notify all admins
-    io.to("admins").emit("notifyStatusChange", {
-      message: `Task "${task.title}" moved to "${task.status}" in Project ${projectId}`,
-      task,
-    });
-  }
-});
-
-  // Project-based chat
   socket.on("sendMessage", (data) => {
-    console.log("New project message:", data);
     socket.to(data.projectId).emit("receiveMessage", data);
   });
 
-  // Conversation (Direct/Group Chat)
   socket.on("joinConversation", (conversationId) => {
     socket.join(conversationId);
-    console.log(`User ${socket.id} joined conversation ${conversationId}`);
   });
 
   socket.on("sendChatMessage", (message) => {
-    console.log("New conversation message:", message);
     socket.to(message.conversation).emit("receiveChatMessage", message);
   });
 
-  // Disconnect
   socket.on("disconnect", () => {
     console.log("User disconnected:", socket.id);
   });
 });
 
-// Start server
-server.listen(PORT, () => console.log(`Server running on port ${PORT}`));   
+// ------------------- CONNECT TO DB & START SERVER -------------------
+mongoose
+  .connect(process.env.MONGODB_URI || "mongodb+srv://yash:yash123@cluster0.pkng7vr.mongodb.net/", {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+  })
+  .then(() => {
+    console.log("✅ Connected to MongoDB");
+    server.listen(PORT, () => {
+      console.log(`🚀 Server running on port ${PORT}`);
+    });
+  })
+  .catch((err) => {
+    console.error("❌ MongoDB connection error:", err);
+  });
