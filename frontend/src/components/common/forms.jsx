@@ -35,10 +35,7 @@ const userId = localStorage.getItem("userId");
     try {
       const response = await api
 .post("/projects", {...formData ,userId});
-      console.log("Project created:", response.data);
-      
-      
-      console.log(localStorage.getItem("userId"));
+    
     } catch (error) {
       console.error("Error submitting project:", error.response?.data || error.message);
       alert("Failed to create project");

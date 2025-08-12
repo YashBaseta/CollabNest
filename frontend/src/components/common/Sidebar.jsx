@@ -36,7 +36,7 @@ const fetchUser = async () => {
       if (!userId) return;
       const res = await api.get(`/users/${userId}`);
       setUser(res.data);  // Store user globally
-    //  console.log(res.data.role);
+   
     } catch (error) {
       console.error("Failed to fetch user:", error);
     }

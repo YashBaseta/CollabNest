@@ -68,7 +68,7 @@ function UserDetails() {
   if (error) return <p className="p-4 text-red-500">{error}</p>;
 
   const handleTaskCreated = (task) => {
-    console.log("New task created:", task);
+  
     setShowPopup(false);
   };
 

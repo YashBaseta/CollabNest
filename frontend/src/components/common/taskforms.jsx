@@ -31,7 +31,7 @@ export default function TaskFormDialog({ projectId, onTaskCreated }) {
   e.preventDefault();
 
   const userId = localStorage.getItem("userId");
-  console.log(userId);
+
   
   if (!userId) {
     alert("User not logged in");

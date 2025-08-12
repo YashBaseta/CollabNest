@@ -30,7 +30,7 @@ export default function CommentFormDialog({ onCommentAdded }) {
     const fetchTasks = async () => {
       try {
         const res = await api.get(`/tasks/project/${projectId}`);
-        console.log(res.data);
+     
         
         setTasks(res.data);
       } catch (err) {

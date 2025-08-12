@@ -108,7 +108,7 @@ export default function ChatSidebar({ conversations, onSelect, onCreateGroup, re
       <ul className="flex-1 overflow-y-auto space-y-2">
   {conversations.map((conv) => {
     if (!user?._id) return null;
-console.log(conv.unreadCount);
+
 
     // Deduplicate members (in case API sends duplicates)
     const uniqueMembers = conv.members.filter(
@@ -118,7 +118,7 @@ console.log(conv.unreadCount);
     
 
     const otherMembers = uniqueMembers.filter((m) => m._id !== user._id);
-    console.log(uniqueMembers);
+    
 
     const displayName = conv.isGroup
       ? conv.name

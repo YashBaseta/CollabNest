@@ -25,7 +25,7 @@ export default function SocketProvider({ children }) {
   useEffect(() => {
     const handleTaskNotification = ({ message }) => {
       toast.success(message);
-      console.log("Task Notification:", message);
+    
 
       // Change page title briefly
       document.title = "🔔 Task Updated!";

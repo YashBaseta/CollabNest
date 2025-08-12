@@ -18,7 +18,7 @@ function TaskPage() {
  const { socket } = useContext(SocketContext);
  const { user, setUser } = useContext(AuthContext);
   const { projectId } = useParams();
-  console.log(user?.role);
+
   
 
 
@@ -27,7 +27,7 @@ function TaskPage() {
 useEffect(() => {
   if (!user || !projectId) return;
   socket.emit("joinRoom", projectId);
-  console.log("Joined project room:", projectId);
+ 
 }, [projectId, user]);
 
 
