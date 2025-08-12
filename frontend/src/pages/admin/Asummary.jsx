@@ -1,24 +1,29 @@
-import { useEffect, useState,useContext } from "react";
-import { useNavigate,useParams } from "react-router-dom";
+import { useEffect, useState, useContext } from "react";
+import { useNavigate, useParams } from "react-router-dom";
 import {
-  PieChart, Pie, Cell,
-  LineChart, Line, XAxis, YAxis, Tooltip, CartesianGrid,
-  BarChart, Bar
+  PieChart,
+  Pie,
+  Cell,
+  LineChart,
+  Line,
+  XAxis,
+  YAxis,
+  Tooltip,
+  CartesianGrid,
+  BarChart,
+  Bar,
 } from "recharts";
 import { AuthContext } from "../../context/AuthContext";
 import Calendar from "react-calendar";
-import 'react-calendar/dist/Calendar.css'; // default styles
+import "react-calendar/dist/Calendar.css"; // default styles
 
 const Asummary = () => {
- const navigate = useNavigate();
-const { projectId } = useParams();
- const { user, setUser } = useContext(AuthContext);
-const USer = user?.role;
+  const navigate = useNavigate();
+  const { projectId } = useParams();
+  const { user, setUser } = useContext(AuthContext);
+  const USer = user?.role;
 
-
-
-
-const handleViewTask = () => {
+  const handleViewTask = () => {
     navigate(`/${USer}/projects/${projectId}/tasks`);
   };
   const taskData = [
@@ -26,7 +31,7 @@ const handleViewTask = () => {
     { name: "In Progress", value: 35, color: "#34d399" },
     { name: "Completed", value: 25, color: "#fbbf24" },
   ];
-const [selectedDate, setSelectedDate] = useState(new Date());
+  const [selectedDate, setSelectedDate] = useState(new Date());
 
   const activityData = [
     { day: "Mon", tasks: 60 },
@@ -47,9 +52,24 @@ const [selectedDate, setSelectedDate] = useState(new Date());
   ];
 
   const schedule = [
-    { date: "2 May", title: "Team Meeting: Project Angelike Update", time: "9:00 AM", color: "bg-blue-400" },
-    { date: "2 May", title: "Client Presentation: New Product Line", time: "10:00 AM", color: "bg-green-400" },
-    { date: "2 May", title: "Weekly Planning Session", time: "4:00 PM", color: "bg-purple-300" }
+    {
+      date: "2 May",
+      title: "Team Meeting: Project Angelike Update",
+      time: "9:00 AM",
+      color: "bg-blue-400",
+    },
+    {
+      date: "2 May",
+      title: "Client Presentation: New Product Line",
+      time: "10:00 AM",
+      color: "bg-green-400",
+    },
+    {
+      date: "2 May",
+      title: "Weekly Planning Session",
+      time: "4:00 PM",
+      color: "bg-purple-300",
+    },
   ];
 
   return (
@@ -58,15 +78,14 @@ const [selectedDate, setSelectedDate] = useState(new Date());
       <div className="flex-1">
         <div className="flex justify-between items-center mb-6">
           <div>
-           
             <p className="text-gray-500">You have 6 tasks today</p>
           </div>
-         <button
-      onClick={handleViewTask}
-      className="px-4 py-2 bg-blue-600 text-white rounded-xl hover:bg-blue-700 transition"
-    >
-      View Task
-    </button>
+          <button
+            onClick={handleViewTask}
+            className="px-4 py-2 bg-blue-600 text-white rounded-xl hover:bg-blue-700 transition"
+          >
+            View Task
+          </button>
         </div>
 
         {/* Stats */}
@@ -90,7 +109,14 @@ const [selectedDate, setSelectedDate] = useState(new Date());
           <div className="p-4 bg-white rounded-xl shadow">
             <h3 className="text-lg font-bold mb-2">Task Summary</h3>
             <PieChart width={250} height={200}>
-              <Pie data={taskData} dataKey="value" cx="50%" cy="50%" outerRadius={80} label>
+              <Pie
+                data={taskData}
+                dataKey="value"
+                cx="50%"
+                cy="50%"
+                outerRadius={80}
+                label
+              >
                 {taskData.map((entry, index) => (
                   <Cell key={index} fill={entry.color} />
                 ))}
@@ -105,7 +131,12 @@ const [selectedDate, setSelectedDate] = useState(new Date());
               <XAxis dataKey="day" />
               <YAxis />
               <Tooltip />
-              <Line type="monotone" dataKey="tasks" stroke="#d8b4fe" strokeWidth={2} />
+              <Line
+                type="monotone"
+                dataKey="tasks"
+                stroke="#d8b4fe"
+                strokeWidth={2}
+              />
             </LineChart>
           </div>
         </div>
@@ -126,21 +157,24 @@ const [selectedDate, setSelectedDate] = useState(new Date());
       <div className="w-80 space-y-6">
         {/* Interactive Calendar */}
         <div className="p-4 bg-white rounded-xl shadow w-atuo mx-auto">
-      <h3 className="text-lg font-bold text-orange-500 mb-4 text-center">
-        {selectedDate.toLocaleString('default', { month: 'long', year: 'numeric' })}
-      </h3>
+          <h3 className="text-lg font-bold text-orange-500 mb-4 text-center">
+            {selectedDate.toLocaleString("default", {
+              month: "long",
+              year: "numeric",
+            })}
+          </h3>
 
-      <Calendar
-        onChange={setSelectedDate}
-        value={selectedDate}
-        className="rounded-lg overflow-hidden"
-        tileClassName={({ date, view }) =>
-          date.toDateString() === new Date().toDateString()
-            ? 'bg-blue-100 text-black rounded'
-            : ''
-        }
-      />
-    </div>
+          <Calendar
+            onChange={setSelectedDate}
+            value={selectedDate}
+            className="rounded-lg overflow-hidden"
+            tileClassName={({ date, view }) =>
+              date.toDateString() === new Date().toDateString()
+                ? "bg-blue-100 text-black rounded"
+                : ""
+            }
+          />
+        </div>
 
         {/* Schedule */}
         <div className="p-4 bg-white rounded-xl shadow">
@@ -154,7 +188,6 @@ const [selectedDate, setSelectedDate] = useState(new Date());
         </div>
 
         {/* Reminder */}
-
       </div>
     </div>
   );

@@ -79,37 +79,36 @@ function UserDashboard() {
 
           {/* Quick Stats */}
           <div className=" h-90">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
-            <div className="h-40 p-4 bg-white rounded-xl shadow flex items-center gap-4">
-              <Folder className="w-15 h-15 text-amber-500" />
-              <div>
-                <p className="text-2xl font-bold">{projects.length}</p>
-                <p className="text-2xl text-gray-500">Projects</p>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+              <div className="h-40 p-4 bg-white rounded-xl shadow flex items-center gap-4">
+                <Folder className="w-15 h-15 text-amber-500" />
+                <div>
+                  <p className="text-2xl font-bold">{projects.length}</p>
+                  <p className="text-2xl text-gray-500">Projects</p>
+                </div>
+              </div>
+              <div className="h-40 p-4 bg-white rounded-xl shadow flex items-center gap-4">
+                <ClipboardList className="w-15 h-15 text-red-500" />
+                <div>
+                  <p className="text-2xl font-bold">12</p>
+                  <p className="text-2xl text-gray-500">Tasks</p>
+                </div>
+              </div>
+              <div className="h-40 p-4 bg-white rounded-xl shadow flex items-center gap-4">
+                <ClipboardList className="w-15 h-15 text-green-500" />
+                <div>
+                  <p className="text-2xl font-bold">12</p>
+                  <p className="text-2xl text-gray-500">Tasks</p>
+                </div>
+              </div>
+              <div className="h-40 p-4 bg-white rounded-xl shadow flex items-center gap-4">
+                <Bell className="w-15 h-15 text-blue-500" />
+                <div>
+                  <p className="text-2xl font-bold">3</p>
+                  <p className="text-2xl text-gray-500">Notifications</p>
+                </div>
               </div>
             </div>
-            <div className="h-40 p-4 bg-white rounded-xl shadow flex items-center gap-4">
-              <ClipboardList className="w-15 h-15 text-red-500" />
-              <div>
-                <p className="text-2xl font-bold">12</p>
-                <p className="text-2xl text-gray-500">Tasks</p>
-              </div>
-            </div>
-            <div className="h-40 p-4 bg-white rounded-xl shadow flex items-center gap-4">
-              <ClipboardList className="w-15 h-15 text-green-500" />
-              <div>
-                <p className="text-2xl font-bold">12</p>
-                <p className="text-2xl text-gray-500">Tasks</p>
-              </div>
-            </div>
-            <div className="h-40 p-4 bg-white rounded-xl shadow flex items-center gap-4">
-              <Bell className="w-15 h-15 text-blue-500" />
-              <div>
-                <p className="text-2xl font-bold">3</p>
-                <p className="text-2xl text-gray-500">Notifications</p>
-              </div>
-              
-            </div>
-          </div>
           </div>
 
           {/* Project List */}
@@ -127,7 +126,9 @@ function UserDashboard() {
                   >
                     <div>
                       <p className="font-semibold">{project.name}</p>
-                      <p className="text-gray-500 text-sm">Key: {project.key}</p>
+                      <p className="text-gray-500 text-sm">
+                        Key: {project.key}
+                      </p>
                     </div>
                     <span className="text-amber-600 text-sm">View</span>
                   </li>

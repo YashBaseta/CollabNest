@@ -21,7 +21,7 @@ function AdminDashboard() {
   const [error, setError] = useState("");
   const [message, setMessage] = useState("");
   const navigate = useNavigate();
-const loggedInUserId = localStorage.getItem("userId");
+  const loggedInUserId = localStorage.getItem("userId");
 
   // Fetch all users
   useEffect(() => {
@@ -39,7 +39,6 @@ const loggedInUserId = localStorage.getItem("userId");
     fetchUsers();
   }, []);
 
-
   // Delete user
   const handleDelete = async (id) => {
     if (!window.confirm("Are you sure you want to delete this user?")) return;
@@ -53,8 +52,6 @@ const loggedInUserId = localStorage.getItem("userId");
       console.error(err);
     }
   };
-
-  
 
   // View user (navigate to view page)
   const handleView = (id) => {
@@ -126,20 +123,21 @@ const loggedInUserId = localStorage.getItem("userId");
                         <td className="px-4 py-2">{user.email}</td>
                         <td className="px-4 py-2 capitalize">
                           <Select
-  onValueChange={(value) => handleRoleChange(user._id, value)}
-  defaultValue={user.role}
-  disabled={user._id === loggedInUserId} // Disable for current user
->
-  <SelectTrigger className="w-[120px]">
-    <SelectValue placeholder="Select Role" />
-  </SelectTrigger>
-  <SelectContent>
-    <SelectItem value="user">User</SelectItem>
-    <SelectItem value="admin">Admin</SelectItem>
-    <SelectItem value="manager">Manager</SelectItem>
-  </SelectContent>
-</Select>
-
+                            onValueChange={(value) =>
+                              handleRoleChange(user._id, value)
+                            }
+                            defaultValue={user.role}
+                            disabled={user._id === loggedInUserId} // Disable for current user
+                          >
+                            <SelectTrigger className="w-[120px]">
+                              <SelectValue placeholder="Select Role" />
+                            </SelectTrigger>
+                            <SelectContent>
+                              <SelectItem value="user">User</SelectItem>
+                              <SelectItem value="admin">Admin</SelectItem>
+                              <SelectItem value="manager">Manager</SelectItem>
+                            </SelectContent>
+                          </Select>
                         </td>
                         <td className="px-4 py-2 flex gap-2">
                           <Button
@@ -150,10 +148,10 @@ const loggedInUserId = localStorage.getItem("userId");
                             <Trash2 className="w-4 h-4" />
                           </Button>
                           <Button
-                          className="border-2"
+                            className="border-2"
                             variant="primary"
                             size="sm"
-                             onClick={() => handleView(user._id)} 
+                            onClick={() => handleView(user._id)}
                           >
                             <View className="w-4 h-4" />
                           </Button>

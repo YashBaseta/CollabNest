@@ -24,14 +24,13 @@ export default function CommentFormDialog({ onCommentAdded }) {
   const [tasks, setTasks] = useState([]);
   const [selectedTask, setSelectedTask] = useState("");
   const [text, setText] = useState("");
-  const { projectId } = useParams(); 
+  const { projectId } = useParams();
   // Fetch tasks for selection
   useEffect(() => {
     const fetchTasks = async () => {
       try {
         const res = await api.get(`/tasks/project/${projectId}`);
-     
-        
+
         setTasks(res.data);
       } catch (err) {
         console.error("Error fetching tasks:", err.message);

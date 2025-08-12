@@ -46,8 +46,7 @@ function Adashboard() {
 
   const fetchProjects = async () => {
     try {
-      const res = await api
-.get("/projects");
+      const res = await api.get("/projects");
       setProjects(res.data);
 
       const foundProject = res.data.find((p) => p._id === projectId);

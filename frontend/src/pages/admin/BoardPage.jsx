@@ -9,51 +9,46 @@ function BoardPage() {
   const [tasks, setTasks] = useState([]);
   const [t, sT] = useState("");
 
-  const { projectId } = useParams(); 
-useEffect(() => {
-  const fetchTasks = async () => {
-    try {
-      const res = await api.get(`/tasks/project/${projectId}`);
-      const task = res.data;
-      sT(task);
-      
-      
-      const taskIds = res.data.map((task) => task._id);
-      setTasks(taskIds);
+  const { projectId } = useParams();
+  useEffect(() => {
+    const fetchTasks = async () => {
+      try {
+        const res = await api.get(`/tasks/project/${projectId}`);
+        const task = res.data;
+        sT(task);
 
+        const taskIds = res.data.map((task) => task._id);
+        setTasks(taskIds);
 
-      // Fetch comments for the first task automatically
-      if (taskIds.length > 0) {
-        fetchComments(taskIds[0]); 
-      } else {
+        // Fetch comments for the first task automatically
+        if (taskIds.length > 0) {
+          fetchComments(taskIds[0]);
+        } else {
+          setLoading(false);
+        }
+      } catch (err) {
+        console.error("Error fetching tasks:", err.message);
+        setError("Failed to load tasks");
         setLoading(false);
       }
+    };
+
+    fetchTasks();
+  }, [projectId]);
+
+  const fetchComments = async (taskId) => {
+    try {
+      const res = await api.get(`/comments/task/${taskId}`);
+      setComments(res.data);
     } catch (err) {
-      console.error("Error fetching tasks:", err.message);
-      setError("Failed to load tasks");
+      setError(err.response?.data?.message || "Failed to load comments");
+    } finally {
       setLoading(false);
     }
   };
 
-  fetchTasks();
-}, [projectId]);
-
-const fetchComments = async (taskId) => {
-  try {
-    const res = await api.get(`/comments/task/${taskId}`);
-    setComments(res.data);
-  } catch (err) {
-    setError(err.response?.data?.message || "Failed to load comments");
-  } finally {
-    setLoading(false);
-  }
-};
-
-if (loading) return <p className="text-center mt-4">Loading comments...</p>;
-if (error) return <p className="text-center mt-4 text-red-500">{error}</p>;
-
-
-
+  if (loading) return <p className="text-center mt-4">Loading comments...</p>;
+  if (error) return <p className="text-center mt-4 text-red-500">{error}</p>;
 
   return (
     <div className="p-6">
@@ -69,9 +64,8 @@ if (error) return <p className="text-center mt-4 text-red-500">{error}</p>;
             >
               <p className="text-gray-800">{comment.text}</p>
               <p className="text-sm text-gray-500 mt-1">
-                  By: {comment.author?.name || "Unknown"} | Task:{" "}
-                {t.map(item => item.title) || "Deleted Task"}
-                
+                By: {comment.author?.name || "Unknown"} | Task:{" "}
+                {t.map((item) => item.title) || "Deleted Task"}
               </p>
             </li>
           ))}

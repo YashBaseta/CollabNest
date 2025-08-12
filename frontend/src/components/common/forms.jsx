@@ -5,19 +5,19 @@ import {
   DialogContent,
   DialogTrigger,
   DialogHeader,
-  DialogFooter
+  DialogFooter,
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 
-const ProjectFormDialog = ({open,setOpen , onProjectCreated}) => {
+const ProjectFormDialog = ({ open, setOpen, onProjectCreated }) => {
   const [formData, setFormData] = useState({
-    userId:"",
+    userId: "",
     name: "",
     key: "",
     access: "",
-    description: ""
+    description: "",
   });
 
   const handleChange = (e) => {
@@ -25,36 +25,38 @@ const ProjectFormDialog = ({open,setOpen , onProjectCreated}) => {
 
     setFormData((prev) => ({
       ...prev,
-      [name]: value
+      [name]: value,
     }));
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-const userId = localStorage.getItem("userId");
+    const userId = localStorage.getItem("userId");
     try {
-      const response = await api
-.post("/projects", {...formData ,userId});
-    
+      const response = await api.post("/projects", { ...formData, userId });
     } catch (error) {
-      console.error("Error submitting project:", error.response?.data || error.message);
+      console.error(
+        "Error submitting project:",
+        error.response?.data || error.message
+      );
       alert("Failed to create project");
     }
- if (onProjectCreated) {
-        onProjectCreated(); // call parent's fetchProjects()
-      }
+    if (onProjectCreated) {
+      onProjectCreated(); // call parent's fetchProjects()
+    }
     setFormData({
-      userId:"",
+      userId: "",
       name: "",
-    key: "",
-    access: "",
-    description: ""})
+      key: "",
+      access: "",
+      description: "",
+    });
 
     setOpen(false);
   };
 
   return (
-    <Dialog open={open} onOpenChange={setOpen} >
+    <Dialog open={open} onOpenChange={setOpen}>
       {/* <DialogTrigger asChild>
         <Button>Add Project</Button>  
       </DialogTrigger> */}
@@ -86,22 +88,21 @@ const userId = localStorage.getItem("userId");
           </div>
 
           <div className="grid gap-2">
-  <Label htmlFor="access">Access</Label>
-  <select
-    id="access"
-    name="access"
-    value={formData.access}
-    onChange={handleChange}
-    required
-    className="border border-gray-300 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-amber-500"
-  >
-    <option value="">Select access level</option>
-    <option value="Public">Public</option>
-    <option value="Private">Private</option>
-    <option value="Restricted">Restricted</option>
-  </select>
-</div>
-
+            <Label htmlFor="access">Access</Label>
+            <select
+              id="access"
+              name="access"
+              value={formData.access}
+              onChange={handleChange}
+              required
+              className="border border-gray-300 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-amber-500"
+            >
+              <option value="">Select access level</option>
+              <option value="Public">Public</option>
+              <option value="Private">Private</option>
+              <option value="Restricted">Restricted</option>
+            </select>
+          </div>
 
           <div className="grid gap-2">
             <Label htmlFor="description">Description</Label>

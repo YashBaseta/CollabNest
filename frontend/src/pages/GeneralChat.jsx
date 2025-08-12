@@ -28,24 +28,21 @@ export default function GeneralChat() {
     if (userId) fetchConversations();
   }, [userId]);
 
-const handleSelectConversation = async (conv) => {
-  setSelectedConversation(conv);
+  const handleSelectConversation = async (conv) => {
+    setSelectedConversation(conv);
 
-  await api.post(`/chat-messages/${conv._id}/read`, { userId });
-  fetchConversations(); // Refresh to reset unread count
-};
-
-
+    await api.post(`/chat-messages/${conv._id}/read`, { userId });
+    fetchConversations(); // Refresh to reset unread count
+  };
 
   return (
     <div className="flex h-screen bg-gray-100">
       <ChatSidebar
-  conversations={conversations}
-  onSelect={handleSelectConversation}
-  onCreateGroup={() => setShowModal(true)}
-  refreshConversations={fetchConversations}
-/>
-
+        conversations={conversations}
+        onSelect={handleSelectConversation}
+        onCreateGroup={() => setShowModal(true)}
+        refreshConversations={fetchConversations}
+      />
 
       <div className="flex-1">
         {selectedConversation ? (

@@ -1,7 +1,13 @@
 import { useEffect, useState } from "react";
 import api from "../../api"; // adjust the path based on your folder structure
 
-export default function ChatWindow({ chat, setChat, socket, conversation, userId }) {
+export default function ChatWindow({
+  chat,
+  setChat,
+  socket,
+  conversation,
+  userId,
+}) {
   const [message, setMessage] = useState("");
 
   // Fetch messages when opening a conversation
@@ -9,8 +15,7 @@ export default function ChatWindow({ chat, setChat, socket, conversation, userId
     const fetchMessages = async () => {
       if (!conversation?._id) return;
       try {
-        const res = await api.get(`/chat-messages/${conversation._id}`
-        );
+        const res = await api.get(`/chat-messages/${conversation._id}`);
         setChat(res.data);
       } catch (err) {
         console.error("Failed to load messages", err);
@@ -37,12 +42,10 @@ export default function ChatWindow({ chat, setChat, socket, conversation, userId
     if (!message.trim()) return;
 
     try {
-      const res = await api.post(`/chat-messages/${conversation._id}`,
-        {
-          sender: userId, // Send only string ID
-          content: message,
-        }
-      );
+      const res = await api.post(`/chat-messages/${conversation._id}`, {
+        sender: userId, // Send only string ID
+        content: message,
+      });
 
       const newMsg = res.data;
       setChat((prev) => [...prev, newMsg]);
@@ -61,16 +64,15 @@ export default function ChatWindow({ chat, setChat, socket, conversation, userId
           const isOwn = senderId === userId;
 
           return (
-           <div
-  key={msg._id}
-  className={`mb-2 ${isOwn ? "text-right" : "text-left"}`}
->
-  <span className="inline-block bg-gray-200 p-2 rounded whitespace-pre-wrap">
-    {msg.sender.name ? `${msg.sender.name}: ` : ""}
-    {msg.content}
-  </span>
-</div>
-
+            <div
+              key={msg._id}
+              className={`mb-2 ${isOwn ? "text-right" : "text-left"}`}
+            >
+              <span className="inline-block bg-gray-200 p-2 rounded whitespace-pre-wrap">
+                {msg.sender.name ? `${msg.sender.name}: ` : ""}
+                {msg.content}
+              </span>
+            </div>
           );
         })}
       </div>
@@ -82,7 +84,6 @@ export default function ChatWindow({ chat, setChat, socket, conversation, userId
           value={message}
           onChange={(e) => setMessage(e.target.value)}
           placeholder="Type a message"
-      
         />
         <button
           className="ml-2 bg-blue-500 text-white px-4 py-2 rounded"

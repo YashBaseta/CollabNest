@@ -2,8 +2,7 @@ import { useContext, useEffect, useState } from "react";
 import api from "../../api"; // adjust the path based on your folder structure
 import { AuthContext } from "../../context/AuthContext";
 
-
-export default function NewGroupModal({ onClose, onGroupCreated,  }) {
+export default function NewGroupModal({ onClose, onGroupCreated }) {
   const [groupName, setGroupName] = useState("");
   const { user, setUser } = useContext(AuthContext);
 
@@ -24,8 +23,7 @@ export default function NewGroupModal({ onClose, onGroupCreated,  }) {
     }
   };
 
-
-    useEffect(() => {
+  useEffect(() => {
     const fetchUser = async () => {
       try {
         const userId = localStorage.getItem("userId");
@@ -45,7 +43,6 @@ export default function NewGroupModal({ onClose, onGroupCreated,  }) {
     fetchUser();
   }, []);
 
-
   return (
     <div className="fixed inset-0 bg-black bg-opacity-40 flex items-center justify-center">
       <div className="bg-white p-6 rounded w-96">
@@ -58,7 +55,9 @@ export default function NewGroupModal({ onClose, onGroupCreated,  }) {
           onChange={(e) => setGroupName(e.target.value)}
         />
         <div className="flex justify-end space-x-2">
-          <button className="px-4 py-2" onClick={onClose}>Cancel</button>
+          <button className="px-4 py-2" onClick={onClose}>
+            Cancel
+          </button>
           <button
             className="bg-blue-500 text-white px-4 py-2 rounded"
             onClick={createGroup}

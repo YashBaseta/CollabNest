@@ -22,8 +22,7 @@ function UserDetails() {
 
   const fetchProjects = async (targetUserId, role) => {
     try {
-      const res = await api
-.get("/projects");
+      const res = await api.get("/projects");
       const filteredProjects = res.data.filter(
         (project) =>
           project.userId?._id === targetUserId ||
@@ -49,8 +48,7 @@ function UserDetails() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const userRes = await api
-.get(`
+        const userRes = await api.get(`
 /users/${id}`);
         setUser(userRes.data);
         await fetchProjects(id, userRes.data.role);
@@ -68,7 +66,6 @@ function UserDetails() {
   if (error) return <p className="p-4 text-red-500">{error}</p>;
 
   const handleTaskCreated = (task) => {
-  
     setShowPopup(false);
   };
 

@@ -2,7 +2,12 @@ import { useContext, useEffect, useState } from "react";
 import { AuthContext } from "../../context/AuthContext";
 import api from "../../api"; // adjust the path based on your folder structure
 
-export default function ChatSidebar({ conversations, onSelect, onCreateGroup, refreshConversations }) {
+export default function ChatSidebar({
+  conversations,
+  onSelect,
+  onCreateGroup,
+  refreshConversations,
+}) {
   const { user, setUser } = useContext(AuthContext);
   const [searchQuery, setSearchQuery] = useState("");
   const [searchResults, setSearchResults] = useState([]);
@@ -83,67 +88,60 @@ export default function ChatSidebar({ conversations, onSelect, onCreateGroup, re
       />
 
       {searchResults.length > 0 && (
-  <ul className="mb-2 bg-gray-50 rounded shadow">
-    {searchResults
-      .filter((u) => {
-        // Check if there is already a DM with this user
-        return !conversations.some(
-          (conv) =>
-            !conv.isGroup &&
-            conv.members.some((m) => m._id === u._id)
-        );
-      })
-      .map((u) => (
-        <li
-          key={u._id}
-          className="p-2 cursor-pointer hover:bg-gray-200"
-          onClick={() => startDM(u)}
-        >
-          {u.name} ({u.email})
-        </li>
-      ))}
-  </ul>
-)}
+        <ul className="mb-2 bg-gray-50 rounded shadow">
+          {searchResults
+            .filter((u) => {
+              // Check if there is already a DM with this user
+              return !conversations.some(
+                (conv) =>
+                  !conv.isGroup && conv.members.some((m) => m._id === u._id)
+              );
+            })
+            .map((u) => (
+              <li
+                key={u._id}
+                className="p-2 cursor-pointer hover:bg-gray-200"
+                onClick={() => startDM(u)}
+              >
+                {u.name} ({u.email})
+              </li>
+            ))}
+        </ul>
+      )}
 
       <ul className="flex-1 overflow-y-auto space-y-2">
-  {conversations.map((conv) => {
-    if (!user?._id) return null;
+        {conversations.map((conv) => {
+          if (!user?._id) return null;
 
+          // Deduplicate members (in case API sends duplicates)
+          const uniqueMembers = conv.members.filter(
+            (m, idx, arr) => arr.findIndex((mem) => mem._id === m._id) === idx
+          );
 
-    // Deduplicate members (in case API sends duplicates)
-    const uniqueMembers = conv.members.filter(
-      (m, idx, arr) => arr.findIndex(mem => mem._id === m._id) === idx
+          const otherMembers = uniqueMembers.filter((m) => m._id !== user._id);
 
-    );
-    
+          const displayName = conv.isGroup
+            ? conv.name
+            : otherMembers[0]?.name || "Unknown User";
 
-    const otherMembers = uniqueMembers.filter((m) => m._id !== user._id);
-    
-
-    const displayName = conv.isGroup
-      ? conv.name
-      : (otherMembers[0]?.name || "Unknown User");
-
-    return (
-      <li
-  key={conv._id}
-  className={`p-2 rounded cursor-pointer flex justify-between items-center hover:bg-gray-100 ${
-    conv.unreadCount > 0 ? "font-bold text-blue-600" : ""
-  }`}
-  onClick={() => onSelect(conv)}
->
-  {displayName}
-  {conv.unreadCount > 0 && (
-    <span className="bg-blue-500 text-white text-xs rounded-full px-2 py-0.5">
-      {conv.unreadCount}
-    </span>
-  )}
-</li>
-
-    );
-  })}
-</ul>
-
+          return (
+            <li
+              key={conv._id}
+              className={`p-2 rounded cursor-pointer flex justify-between items-center hover:bg-gray-100 ${
+                conv.unreadCount > 0 ? "font-bold text-blue-600" : ""
+              }`}
+              onClick={() => onSelect(conv)}
+            >
+              {displayName}
+              {conv.unreadCount > 0 && (
+                <span className="bg-blue-500 text-white text-xs rounded-full px-2 py-0.5">
+                  {conv.unreadCount}
+                </span>
+              )}
+            </li>
+          );
+        })}
+      </ul>
     </div>
   );
 }

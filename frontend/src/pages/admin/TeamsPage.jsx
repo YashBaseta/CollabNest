@@ -18,7 +18,7 @@ const socket = io("https://collabnest-m2h3.onrender.com/");
 function TeamsPage() {
   const { projectId } = useParams();
 
-  const [users, setUsers] = useState([]); 
+  const [users, setUsers] = useState([]);
   const [selectedUser, setSelectedUser] = useState("");
   const [projectMembers, setProjectMembers] = useState([]);
 
@@ -45,8 +45,6 @@ function TeamsPage() {
     try {
       const res = await api.get("/users");
       setUsers(res.data);
-    
-      
     } catch (err) {
       console.error("Error fetching users:", err);
     }
@@ -54,8 +52,7 @@ function TeamsPage() {
 
   const fetchProjectMembers = async () => {
     try {
-      const res = await api.get(`/projects/${projectId}`
-      );
+      const res = await api.get(`/projects/${projectId}`);
       setProjectMembers(res.data.members || []);
     } catch (err) {
       console.error("Error fetching project members:", err);
@@ -66,9 +63,9 @@ function TeamsPage() {
     if (!selectedUser) return alert("Select a user first");
 
     try {
-      await api.post(`/projects/${projectId}/members`,
-        { userId: selectedUser }
-      );
+      await api.post(`/projects/${projectId}/members`, {
+        userId: selectedUser,
+      });
 
       // Broadcast team update via socket
       socket.emit("teamChanged", projectId);
@@ -77,11 +74,10 @@ function TeamsPage() {
     }
     fetchProjectMembers();
   };
-  
+
   const handleRemoveMember = async (userId) => {
     try {
-      await api
-.delete(
+      await api.delete(
         `
 /projects/${projectId}/members/${userId}`
       );
@@ -94,25 +90,16 @@ function TeamsPage() {
     fetchProjectMembers();
   };
 
-
-const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   const openModal = () => setIsModalOpen(true);
   const closeModal = () => setIsModalOpen(false);
 
-
-
-
-
   return (
     <div className="p-8  ">
-     
-
       {/* Add Member */}
       <section className="flex justify-between">
-        <h2 className="text-2xl font-semibold text-gray-800 mb-4">
-          Teams
-        </h2>
+        <h2 className="text-2xl font-semibold text-gray-800 mb-4">Teams</h2>
         <div className="flex flex-wrap gap-4 items-center">
           <Select onValueChange={(value) => setSelectedUser(value)}>
             <SelectTrigger className="w-[300px] border border-gray-300 rounded-lg shadow-sm">
@@ -133,62 +120,63 @@ const [isModalOpen, setIsModalOpen] = useState(false);
           >
             Add
           </Button>
-         <Button onClick={openModal} className="bg-amber-600 hover:bg-amber-700 text-white font-medium px-6 py-2 rounded-lg shadow-sm">Show Members</Button>
+          <Button
+            onClick={openModal}
+            className="bg-amber-600 hover:bg-amber-700 text-white font-medium px-6 py-2 rounded-lg shadow-sm"
+          >
+            Show Members
+          </Button>
 
-      {/* Modal */}
-      {isModalOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center backdrop-blur-sm bg-black/10">
-          <div className="bg-white rounded-lg shadow-xl w-full max-w-lg p-6 relative max-h-[80vh] overflow-y-auto">
-            {/* Close Button */}
-            <button
-              onClick={closeModal}
-              className="absolute top-3 right-4 text-gray-500 hover:text-gray-700 text-2xl"
-            >
-              &times;
-            </button>
+          {/* Modal */}
+          {isModalOpen && (
+            <div className="fixed inset-0 z-50 flex items-center justify-center backdrop-blur-sm bg-black/10">
+              <div className="bg-white rounded-lg shadow-xl w-full max-w-lg p-6 relative max-h-[80vh] overflow-y-auto">
+                {/* Close Button */}
+                <button
+                  onClick={closeModal}
+                  className="absolute top-3 right-4 text-gray-500 hover:text-gray-700 text-2xl"
+                >
+                  &times;
+                </button>
 
-            <h2 className="text-2xl font-semibold text-center mb-6">
-              Project Members
-            </h2>
+                <h2 className="text-2xl font-semibold text-center mb-6">
+                  Project Members
+                </h2>
 
-            {projectMembers.length === 0 ? (
-              <div className="text-gray-500 italic text-center">
-                No members yet.
+                {projectMembers.length === 0 ? (
+                  <div className="text-gray-500 italic text-center">
+                    No members yet.
+                  </div>
+                ) : (
+                  <ul className="flex flex-col gap-4">
+                    {projectMembers.map((member) => (
+                      <li
+                        key={member._id}
+                        className="bg-gray-100 border border-gray-200 rounded-lg p-4"
+                      >
+                        <p className="text-lg font-medium text-center">
+                          {member.name}
+                        </p>
+                        <p className="text-sm text-gray-500 text-center">
+                          {member.email}
+                        </p>
+                        <Button
+                          variant="destructive"
+                          size="sm"
+                          className="mt-4 mx-auto block"
+                          onClick={() => handleRemoveMember(member._id)}
+                        >
+                          Remove
+                        </Button>
+                      </li>
+                    ))}
+                  </ul>
+                )}
               </div>
-            ) : (
-              <ul className="flex flex-col gap-4">
-                {projectMembers.map((member) => (
-                  <li
-                    key={member._id}
-                    className="bg-gray-100 border border-gray-200 rounded-lg p-4"
-                  >
-                    <p className="text-lg font-medium text-center">
-                      {member.name}
-                    </p>
-                    <p className="text-sm text-gray-500 text-center">
-                      {member.email}
-                    </p>
-                    <Button
-                      variant="destructive"
-                      size="sm"
-                      className="mt-4 mx-auto block"
-                      onClick={() => handleRemoveMember(member._id)}
-                    >
-                      Remove
-                    </Button>
-                  </li>
-                ))}
-              </ul>
-            )}
-          </div>
-        </div>
-      )}
-                    
+            </div>
+          )}
         </div>
       </section>
-
-    
-      
 
       {/* Chatbox */}
       <div className="mt-10">

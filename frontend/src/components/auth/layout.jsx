@@ -1,13 +1,10 @@
-import { Outlet } from 'react-router-dom';
+import { Outlet } from "react-router-dom";
 function Layout(params) {
-    return(
-       <>
-        
-<Outlet/>
-      
-    
+  return (
+    <>
+      <Outlet />
     </>
-    )
+  );
 }
 
 export default Layout;

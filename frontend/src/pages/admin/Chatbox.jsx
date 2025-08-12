@@ -33,9 +33,7 @@ export default function Chatbox() {
 
     const messageData = { senderId: user.id, content: message };
     try {
-      const res = await api.post(`/messages/${projectId}`,
-        messageData
-      );
+      const res = await api.post(`/messages/${projectId}`, messageData);
       const savedMessage = res.data;
       socket.emit("sendMessage", { ...savedMessage, projectId });
       setMessage("");
@@ -45,37 +43,40 @@ export default function Chatbox() {
   };
 
   useEffect(() => {
-  fetchMessages();
-  socket.emit("joinRoom", projectId);
+    fetchMessages();
+    socket.emit("joinRoom", projectId);
 
-  const handleMessage = (msg) => {
-    // Just update the chat, no notifications here
-    setChat((prev) => {
-      if (prev.some((m) => m._id === msg._id)) return prev;
-      return [...prev, msg];
-    });
-  };
+    const handleMessage = (msg) => {
+      // Just update the chat, no notifications here
+      setChat((prev) => {
+        if (prev.some((m) => m._id === msg._id)) return prev;
+        return [...prev, msg];
+      });
+    };
 
-  socket.on("receiveMessage", handleMessage);
+    socket.on("receiveMessage", handleMessage);
 
-  return () => {
-    socket.off("receiveMessage", handleMessage);
-  };
-}, [projectId, socket]);
-
+    return () => {
+      socket.off("receiveMessage", handleMessage);
+    };
+  }, [projectId, socket]);
 
   useEffect(scrollToBottom, [chat]);
 
   return (
-<div className="p-4 bg-gray-50 rounded-lg shadow-md w-full max-w-5xl flex flex-col h-[80vh] sm:h-[500px] border border-gray-200 mx-auto">
-      <h2 className="text-lg font-bold mb-3 text-center text-gray-700">Project Chat</h2>
+    <div className="p-4 bg-gray-50 rounded-lg shadow-md w-full max-w-5xl flex flex-col h-[80vh] sm:h-[500px] border border-gray-200 mx-auto">
+      <h2 className="text-lg font-bold mb-3 text-center text-gray-700">
+        Project Chat
+      </h2>
       <div className="flex-1 overflow-y-auto space-y-2 p-2 bg-white rounded-md border">
         {chat.length === 0 ? (
           <p className="text-gray-400 text-center">No messages yet...</p>
         ) : (
           chat.map((msg, idx) => {
             const isSelf = msg.sender?._id === user.id;
-            const timestamp = new Date(msg.createdAt || Date.now()).toLocaleTimeString([], {
+            const timestamp = new Date(
+              msg.createdAt || Date.now()
+            ).toLocaleTimeString([], {
               hour: "2-digit",
               minute: "2-digit",
             });
@@ -83,7 +84,9 @@ export default function Chatbox() {
             return (
               <div
                 key={msg._id || idx}
-                className={`flex flex-col ${isSelf ? "ml-auto items-end" : "mr-auto items-start"}`}
+                className={`flex flex-col ${
+                  isSelf ? "ml-auto items-end" : "mr-auto items-start"
+                }`}
               >
                 <div
                   className={`px-3 py-2 rounded-2xl shadow text-sm ${
