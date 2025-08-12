@@ -71,12 +71,6 @@ export default function ChatSidebar({
     <div className="w-64 bg-white border-r p-4 flex flex-col">
       <div className="flex justify-between items-center mb-4">
         <h2 className="text-lg font-bold">Chats</h2>
-        <button
-          className="bg-blue-500 text-white px-2 py-1 rounded"
-          onClick={onCreateGroup}
-        >
-          + Group
-        </button>
       </div>
 
       <input
